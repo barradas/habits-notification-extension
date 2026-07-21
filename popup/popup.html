@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DeskHabits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="logo-icon">⚡</span>
+        <h1>DeskHabits</h1>
+      </div>
+      <div class="master-toggle-container">
+        <span class="toggle-label">Active</span>
+        <label class="switch">
+          <input type="checkbox" id="master-pause-toggle" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </header>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="tab-navigation">
+      <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+      <button class="tab-btn" data-tab="habits">Habits</button>
+      <button class="tab-btn" data-tab="settings">Settings</button>
+      <button class="tab-btn" data-tab="stats">Stats</button>
+    </nav>
+
+    <!-- Content Sections -->
+    <main class="tab-content">
+      
+      <!-- 1. DASHBOARD VIEW -->
+      <section id="tab-dashboard" class="view-pane active">
+        <div class="glass-card main-stats-card">
+          <div class="progress-ring-container">
+            <svg class="progress-ring" width="120" height="120">
+              <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.06)" stroke-width="8" fill="transparent" r="50" cx="60" cy="60" />
+              <circle class="progress-ring-circle" id="today-progress-circle" stroke="url(#indigo-purple-grad)" stroke-width="8" stroke-dasharray="314.16 314.16" stroke-dashoffset="314.16" stroke-linecap="round" fill="transparent" r="50" cx="60" cy="60" />
+              <defs>
+                <linearGradient id="indigo-purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6366f1" />
+                  <stop offset="100%" stop-color="#a855f7" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="progress-value">
+              <span id="today-percent-text">0%</span>
+              <span class="progress-sub">Done</span>
+            </div>
+          </div>
+
+          <div class="quick-summary-grid">
+            <div class="summary-item">
+              <span class="summary-label">Streak</span>
+              <span class="summary-value" id="streak-value">0</span>
+              <span class="summary-unit">days</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Completed</span>
+              <span class="summary-value success-text" id="completed-value">0</span>
+              <span class="summary-unit">reminders</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Skipped</span>
+              <span class="summary-value warning-text" id="skipped-value">0</span>
+              <span class="summary-unit">reminders</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="pending-habit-section" class="glass-card hidden" style="margin-top: 15px; border: 1px solid rgba(99,102,241,0.5); background: rgba(99,102,241,0.1);">
+          <p style="margin: 0 0 6px 0; font-size: 12px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.05em;">Did you complete this?</p>
+          <p id="pending-habit-name" style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600;"></p>
+          <div style="display: flex; gap: 10px;">
+            <button id="pending-done-btn" class="btn btn-primary" style="flex: 1; font-size: 13px;">Done! ✅</button>
+            <button id="pending-skip-btn" class="btn btn-secondary" style="flex: 1; font-size: 13px;">Skip ⏭️</button>
+          </div>
+        </div>
+
+        <div class="next-reminder-card glass-card">
+          <div class="reminder-info">
+            <span class="card-subtitle">Next Reminder</span>
+            <h3 id="next-reminder-title">Ready when you are</h3>
+            <p class="reminder-time-eta" id="next-reminder-eta">No active alarms</p>
+          </div>
+          <button class="btn btn-secondary btn-icon-only" id="trigger-now-btn" title="Trigger a reminder now">
+            ▶
+          </button>
+        </div>
+      </section>
+
+      <!-- 2. HABITS VIEW -->
+      <section id="tab-habits" class="view-pane">
+        <div class="habits-header">
+          <h3>Your Desk Habits</h3>
+          <button class="btn btn-primary" id="open-add-habit-btn">+ Add Habit</button>
+        </div>
+
+        <!-- Add/Edit Habit Modal/Form (Inline Glass Card) -->
+        <div class="add-habit-overlay hidden" id="habit-form-container">
+          <div class="glass-card habit-form-card">
+            <h4 id="habit-form-title">Create New Habit</h4>
+            <div class="form-group">
+              <label for="habit-name-input">Habit Action</label>
+              <input type="text" id="habit-name-input" placeholder="e.g. Do 15 squats, stretch neck" required>
+            </div>
+            <div class="form-group inline-group">
+              <label for="habit-interval-input">Interval (minutes)</label>
+              <input type="number" id="habit-interval-input" min="1" max="1440" value="30">
+            </div>
+            <input type="hidden" id="habit-edit-id">
+            <div class="form-actions">
+              <button class="btn btn-secondary" id="cancel-habit-btn">Cancel</button>
+              <button class="btn btn-primary" id="save-habit-btn">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="habits-list" id="habits-list-container">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- 3. SETTINGS VIEW -->
+      <section id="tab-settings" class="view-pane">
+        <div class="glass-card settings-card">
+          <h3>How should we remind you?</h3>
+          
+          <div class="form-group">
+            <label>Delivery Method</label>
+            <div class="mode-selector-grid">
+              <label class="mode-option" id="mode-option-cycle">
+                <input type="radio" name="reminder-mode" value="cycle" checked>
+                <div class="mode-desc">
+                  <strong>Sequential (One-by-one)</strong>
+                  <span>Fires one reminder per interval, rotating through your list.</span>
+                </div>
+              </label>
+              <label class="mode-option" id="mode-option-individual">
+                <input type="radio" name="reminder-mode" value="individual">
+                <div class="mode-desc">
+                  <strong>Independent Timers</strong>
+                  <span>Each habit uses its own timer. Multiple can fire at the same time.</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" id="cycle-interval-group">
+            <label for="settings-cycle-interval">Time between sequential reminders (minutes)</label>
+            <input type="number" id="settings-cycle-interval" min="1" max="1440" value="45">
+          </div>
+
+          <div class="form-group time-range-group">
+            <label>Active Work Hours</label>
+            <div class="time-range-inputs">
+              <div class="time-field">
+                <span>Start</span>
+                <input type="time" id="settings-start-time" value="09:00">
+              </div>
+              <div class="time-field">
+                <span>End</span>
+                <input type="time" id="settings-end-time" value="18:00">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Active Days</label>
+            <div class="days-selector-grid">
+              <label class="day-checkbox">
+                <input type="checkbox" name="workday" value="1" checked>
+                <span>M</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="workday" value="2" checked>
+                <span>T</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="workday" value="3" checked>
+                <span>W</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="workday" value="4" checked>
+                <span>T</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="workday" value="5" checked>
+                <span>F</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="workday" value="6">
+                <span>S</span>
+              </label>
+              <label class="day-checkbox">
+                <input type="checkbox" name="workday" value="0">
+                <span>S</span>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-full" id="save-settings-btn">Save Configurations</button>
+          <div id="settings-save-success" class="toast hidden">Settings Saved!</div>
+          
+          <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <button class="btn btn-secondary w-full" id="reset-stats-btn" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">Danger: Reset All Stats & Streaks</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. STATS VIEW -->
+      <section id="tab-stats" class="view-pane">
+        <div class="glass-card stats-overview-card">
+          <h3>Performance</h3>
+          <div class="stats-large-summary">
+            <div class="stat-bubble">
+              <span class="bubble-value" id="stats-total-completions">0</span>
+              <span class="bubble-label">Total Done</span>
+            </div>
+            <div class="stat-bubble">
+              <span class="bubble-value" id="stats-completion-rate">0%</span>
+              <span class="bubble-label">Success Rate</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card chart-card">
+          <h4>Weekly Activity</h4>
+          <div class="bar-chart-container">
+            <div class="chart-y-axis">
+              <span>100%</span>
+              <span>50%</span>
+              <span>0%</span>
+            </div>
+            <div class="chart-bars" id="weekly-chart-bars">
+              <!-- Dynamically rendered bars -->
+            </div>
+          </div>
+          <div class="chart-labels" id="weekly-chart-labels">
+            <!-- Dynamically rendered day names -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

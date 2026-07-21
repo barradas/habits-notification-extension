@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "DeskHabits: Health & Movement Reminders",
+  "version": "1.0.0",
+  "description": "Stay active, hydrated, and focused. Get scheduled physical activity and wellness reminders while working at your desk.",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    },
+    "default_title": "DeskHabits Reminders"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["debug.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

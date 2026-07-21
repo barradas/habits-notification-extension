@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DeskHabits Debug</title>
+  <style>
+    body { font-family: monospace; background: #1a1a2e; color: #eee; padding: 20px; font-size: 13px; }
+    button { background: #6366f1; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin: 4px; }
+    button.danger { background: #ef4444; }
+    button.green { background: #22c55e; }
+    pre { background: #0f0f23; padding: 15px; border-radius: 8px; overflow: auto; border: 1px solid #333; }
+    h2 { color: #a855f7; }
+    .section { margin-bottom: 24px; }
+  </style>
+</head>
+<body>
+  <h1>DeskHabits Debug Panel</h1>
+
+  <div class="section">
+    <h2>1. Current Storage State</h2>
+    <button onclick="dumpStorage()">🔄 Refresh Storage Dump</button>
+    <pre id="storage-dump">Click refresh...</pre>
+  </div>
+
+  <div class="section">
+    <h2>2. Manually Mark a Habit as Done (Today)</h2>
+    <button class="green" onclick="manualMarkDone()">✅ Add +1 Completed Today</button>
+    <button class="danger" onclick="manualMarkSkipped()">⏭️ Add +1 Skipped Today</button>
+    <pre id="manual-result">Result will appear here...</pre>
+  </div>
+
+  <div class="section">
+    <h2>3. Clear All Stats</h2>
+    <button class="danger" onclick="clearStats()">🗑️ Reset Stats + Streak</button>
+  </div>
+
+  <div class="section">
+    <h2>4. Set Fake Pending Habit</h2>
+    <button onclick="setFakePending()">Set pendingHabit = water habit</button>
+    <button class="danger" onclick="clearPending()">Clear pendingHabit</button>
+  </div>
+
+  <script>
+    function getLocalDateString(d = new Date()) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    async function dumpStorage() {
+      const data = await chrome.storage.local.get(null);
+      document.getElementById('storage-dump').textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function manualMarkDone() {
+      const data = await chrome.storage.local.get(['stats', 'streak', 'lastActiveDate']);
+      const stats = data.stats || {};
+      let streak = data.streak || 0;
+      let lastActiveDate = data.lastActiveDate || '';
+      const today = getLocalDateString();
+
+      if (!stats[today]) stats[today] = { completed: 0, skipped: 0, completionsByHabit: {} };
+      stats[today].completed += 1;
+
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yStr = getLocalDateString(yesterday);
+
+      if (lastActiveDate !== today) {
+        streak = lastActiveDate === yStr ? streak + 1 : 1;
+        lastActiveDate = today;
+      }
+
+      await chrome.storage.local.set({ stats, streak, lastActiveDate });
+      document.getElementById('manual-result').textContent = `✅ Done! Today (${today}): completed=${stats[today].completed}`;
+      await dumpStorage();
+    }
+
+    async function manualMarkSkipped() {
+      const data = await chrome.storage.local.get('stats');
+      const stats = data.stats || {};
+      const today = getLocalDateString();
+      if (!stats[today]) stats[today] = { completed: 0, skipped: 0, completionsByHabit: {} };
+      stats[today].skipped += 1;
+      await chrome.storage.local.set({ stats });
+      document.getElementById('manual-result').textContent = `⏭️ Skipped. Today (${today}): skipped=${stats[today].skipped}`;
+      await dumpStorage();
+    }
+
+    async function clearStats() {
+      await chrome.storage.local.set({ stats: {}, streak: 0, lastActiveDate: '' });
+      document.getElementById('manual-result').textContent = 'Stats cleared!';
+      await dumpStorage();
+    }
+
+    async function setFakePending() {
+      await chrome.storage.local.set({ pendingHabit: { id: 'water', name: 'Drink a glass of water 💧' } });
+      await dumpStorage();
+    }
+
+    async function clearPending() {
+      await chrome.storage.local.remove('pendingHabit');
+      await dumpStorage();
+    }
+
+    // Auto-dump on load
+    dumpStorage();
+  </script>
+</body>
+</html>
