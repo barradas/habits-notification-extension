@@ -700,7 +700,7 @@ const FALLBACK_DEALS = [
     rating: "★ 4.8",
     badge_class: "hydration",
     image_url: "https://m.media-amazon.com/images/I/51+uE5wN5vL._AC_SL1500_.jpg",
-    affiliate_url: "https://www.amazon.com/dp/B07G2CS3PL?tag=deskhabits-20"
+    affiliate_url: "https://www.amazon.com/s?k=smart+water+bottle&tag=deskhabits-20"
   },
   {
     id: "posture_1",
@@ -711,7 +711,7 @@ const FALLBACK_DEALS = [
     rating: "★ 4.9",
     badge_class: "posture",
     image_url: "https://m.media-amazon.com/images/I/81h9bXn8BvL._AC_SL1500_.jpg",
-    affiliate_url: "https://www.amazon.com/dp/B01EBDV9BU?tag=deskhabits-20"
+    affiliate_url: "https://www.amazon.com/s?k=ergonomic+seat+cushion&tag=deskhabits-20"
   },
   {
     id: "recovery_1",
@@ -722,7 +722,7 @@ const FALLBACK_DEALS = [
     rating: "★ 4.8",
     badge_class: "recovery",
     image_url: "https://m.media-amazon.com/images/I/61NfT-jN27L._AC_SL1500_.jpg",
-    affiliate_url: "https://www.amazon.com/dp/B084394ZKV?tag=deskhabits-20"
+    affiliate_url: "https://www.amazon.com/s?k=mini+massage+gun&tag=deskhabits-20"
   },
   {
     id: "eye_health_1",
@@ -733,7 +733,7 @@ const FALLBACK_DEALS = [
     rating: "★ 4.7",
     badge_class: "eye-health",
     image_url: "https://m.media-amazon.com/images/I/61D8N2g4b4L._AC_SL1500_.jpg",
-    affiliate_url: "https://www.amazon.com/dp/B07D38JMB9?tag=deskhabits-20"
+    affiliate_url: "https://www.amazon.com/s?k=blue+light+blocking+glasses&tag=deskhabits-20"
   }
 ];
 
