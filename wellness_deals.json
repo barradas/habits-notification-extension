@@ -5,46 +5,38 @@
     {
       "id": "hydration_1",
       "category": "Hydration",
-      "title": "LARQ Smart Self-Cleaning Water Bottle",
-      "description": "Uses UV-C LED light to sanitize water & clean inner bottle surfaces automatically.",
-      "price": "$99.00",
-      "rating": "★ 4.8",
+      "icon": "💧",
+      "title": "Smart Self-Cleaning Water Bottle",
+      "description": "Uses UV-C light to sanitize water and keep your desk bottle odor-free.",
       "badge_class": "hydration",
-      "image_url": "/icons/product-bottle.png",
-      "affiliate_url": "https://www.amazon.com/dp/B07G2CS3PL?tag=deskhabits-20"
+      "affiliate_url": "https://www.amazon.com/s?k=Smart+Self+Cleaning+Water+Bottle&tag=deskhabits-20"
     },
     {
       "id": "posture_1",
       "category": "Posture",
-      "title": "Everlasting Comfort Memory Foam Cushion",
-      "description": "Ergonomic U-shape cut-out relieves tailbone pressure & improves posture during long hours.",
-      "price": "$39.95",
-      "rating": "★ 4.9",
+      "icon": "🪑",
+      "title": "Ergonomic Memory Foam Seat Cushion",
+      "description": "Relieves tailbone pressure & supports spine posture for long sitting sessions.",
       "badge_class": "posture",
-      "image_url": "/icons/product-cushion.png",
-      "affiliate_url": "https://www.amazon.com/dp/B01EBDV9BU?tag=deskhabits-20"
+      "affiliate_url": "https://www.amazon.com/s?k=Ergonomic+Memory+Foam+Seat+Cushion&tag=deskhabits-20"
     },
     {
       "id": "recovery_1",
       "category": "Recovery",
-      "title": "Theragun Mini Deep Tissue Massage Gun",
-      "description": "Ultra-portable massage gun designed to relieve neck stiffness & shoulder strain during breaks.",
-      "price": "$179.00",
-      "rating": "★ 4.8",
+      "icon": "💆",
+      "title": "Mini Deep Tissue Massage Gun",
+      "description": "Compact massage tool to soothe neck stiffness & shoulder tension during work breaks.",
       "badge_class": "recovery",
-      "image_url": "/icons/product-massage.png",
-      "affiliate_url": "https://www.amazon.com/dp/B0B5F4M7V4?tag=deskhabits-20"
+      "affiliate_url": "https://www.amazon.com/s?k=Mini+Deep+Tissue+Massage+Gun&tag=deskhabits-20"
     },
     {
       "id": "eye_health_1",
       "category": "Eye Health",
-      "title": "ANRRI Blue Light Blocking Glasses",
-      "description": "Reduces digital eye strain, glare & headaches during extended screen & coding sessions.",
-      "price": "$25.95",
-      "rating": "★ 4.7",
+      "icon": "👓",
+      "title": "Blue Light Blocking Glasses",
+      "description": "Protects against glare and digital eye fatigue during extended screen time.",
       "badge_class": "eye-health",
-      "image_url": "/icons/product-glasses.png",
-      "affiliate_url": "https://www.amazon.com/dp/B07D38JMB9?tag=deskhabits-20"
+      "affiliate_url": "https://www.amazon.com/s?k=Blue+Light+Blocking+Glasses&tag=deskhabits-20"
     }
   ]
 }

@@ -694,46 +694,38 @@ const FALLBACK_DEALS = [
   {
     id: "hydration_1",
     category: "Hydration",
-    title: "LARQ Smart Self-Cleaning Bottle",
-    description: "UV-C LED light sanitizes water & bottle interior automatically.",
-    price: "$99.00",
-    rating: "★ 4.8",
+    icon: "💧",
+    title: "Smart Self-Cleaning Water Bottle",
+    description: "Uses UV-C light to sanitize water and keep your desk bottle odor-free.",
     badge_class: "hydration",
-    image_url: "/icons/product-bottle.png",
-    affiliate_url: "https://www.amazon.com/dp/B07G2CS3PL?tag=deskhabits-20"
+    affiliate_url: "https://www.amazon.com/s?k=Smart+Self+Cleaning+Water+Bottle&tag=deskhabits-20"
   },
   {
     id: "posture_1",
     category: "Posture",
-    title: "Everlasting Ergonomic Seat Cushion",
-    description: "Memory foam U-shape cut-out relieves tailbone & back pressure.",
-    price: "$39.95",
-    rating: "★ 4.9",
+    icon: "🪑",
+    title: "Ergonomic Memory Foam Seat Cushion",
+    description: "Relieves tailbone pressure & supports spine posture for long sitting sessions.",
     badge_class: "posture",
-    image_url: "/icons/product-cushion.png",
-    affiliate_url: "https://www.amazon.com/dp/B01EBDV9BU?tag=deskhabits-20"
+    affiliate_url: "https://www.amazon.com/s?k=Ergonomic+Memory+Foam+Seat+Cushion&tag=deskhabits-20"
   },
   {
     id: "recovery_1",
     category: "Recovery",
-    title: "Theragun Mini Deep Tissue Massage Gun",
-    description: "Ultra-portable massage gun relieves neck & shoulder stiffness.",
-    price: "$179.00",
-    rating: "★ 4.8",
+    icon: "💆",
+    title: "Mini Deep Tissue Massage Gun",
+    description: "Compact massage tool to soothe neck stiffness & shoulder tension during work breaks.",
     badge_class: "recovery",
-    image_url: "/icons/product-massage.png",
-    affiliate_url: "https://www.amazon.com/dp/B0B5F4M7V4?tag=deskhabits-20"
+    affiliate_url: "https://www.amazon.com/s?k=Mini+Deep+Tissue+Massage+Gun&tag=deskhabits-20"
   },
   {
     id: "eye_health_1",
     category: "Eye Health",
-    title: "ANRRI Blue Light Blocking Glasses",
-    description: "Reduces digital eye strain & headaches during long coding sessions.",
-    price: "$25.95",
-    rating: "★ 4.7",
+    icon: "👓",
+    title: "Blue Light Blocking Glasses",
+    description: "Protects against glare and digital eye fatigue during extended screen time.",
     badge_class: "eye-health",
-    image_url: "/icons/product-glasses.png",
-    affiliate_url: "https://www.amazon.com/dp/B07D38JMB9?tag=deskhabits-20"
+    affiliate_url: "https://www.amazon.com/s?k=Blue+Light+Blocking+Glasses&tag=deskhabits-20"
   }
 ];
 
@@ -771,44 +763,26 @@ async function renderWellnessHub() {
 
   container.innerHTML = '';
 
-const CATEGORY_FALLBACK_IMAGES = {
-  hydration: '/icons/product-bottle.png',
-  posture: '/icons/product-cushion.png',
-  recovery: '/icons/product-massage.png',
-  'eye-health': '/icons/product-glasses.png'
-};
-
   deals.forEach(deal => {
     const card = document.createElement('div');
     card.className = 'wellness-card';
-    const priceDisplay = deal.price ? `<span class="product-price-tag">${escapeHTML(deal.price)}</span>` : `<span class="product-price-tag" style="color:var(--text-sub); font-size: 10px;">Check Price on Amazon</span>`;
-    const fallbackSrc = CATEGORY_FALLBACK_IMAGES[deal.badge_class] || '/icons/icon-48.png';
+    const iconHtml = deal.icon ? `<div class="product-icon">${escapeHTML(deal.icon)}</div>` : '';
 
     card.innerHTML = `
-      <div class="product-badge-row">
+      <div class="product-header-row">
         <span class="product-badge ${deal.badge_class || 'hydration'}">${escapeHTML(deal.category || 'Gear')}</span>
-        <span class="product-rating">${escapeHTML(deal.rating || '★ 4.8')}</span>
       </div>
       <div class="product-content">
-        <img class="product-thumb-img" src="${escapeHTML(deal.image_url || fallbackSrc)}" alt="${escapeHTML(deal.title)}" />
+        ${iconHtml}
         <div class="product-info">
           <h4>${escapeHTML(deal.title)}</h4>
           <p>${escapeHTML(deal.description)}</p>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-            ${priceDisplay}
-            <a href="${escapeHTML(deal.affiliate_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm product-link">Check Deal ↗</a>
-          </div>
+          <a href="${escapeHTML(deal.affiliate_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm product-link">View on Amazon ↗</a>
         </div>
       </div>
     `;
 
-    const img = card.querySelector('.product-thumb-img');
-    if (img) {
-      img.addEventListener('error', () => {
-        img.src = fallbackSrc;
-      }, { once: true });
-    }
-
     container.appendChild(card);
   });
 }
+
