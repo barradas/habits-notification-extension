@@ -13,14 +13,15 @@ Get periodic, custom physical habit reminders like squats, stretching, and drink
 **Detailed Description**
 DeskHabits is a Chrome extension that prompts remote developers, designers, and desk workers to perform physical breaks and healthy habits periodically.
 
-Core features include dual timing modes (Single Global Cycle or Individual Timers per habit), working hours filtering (e.g., 9:00 AM - 6:00 PM) to prevent late-night alerts, workday exclusions, custom habit creation, and streak and completion statistics tracking inside a beautiful dark-mode dashboard.
+Core features include dual timing modes (Single Global Cycle or Individual Timers per habit), working hours filtering (e.g., 9:00 AM - 6:00 PM) to prevent late-night alerts, workday exclusions, custom habit creation, streak and completion statistics tracking inside a dark-mode dashboard, and a curated Desk Wellness Hub featuring ergonomic gear recommendations.
 
 How to use:
 1. Click the DeskHabits extension icon to open the popup dashboard.
 2. Toggle or modify default habits (drinking water, doing squats, stretches, eye relief) or add your own custom activities.
 3. Configure active start/end hours and days of the week to align with your remote work schedule.
-4. Interact directly with desktop notifications: Click "Done! ✅" to track progress, or "Snooze 5m ⏳" to reschedule a quick reminder.
-5. Track your completion rate and weekly stats inside the stats tab.
+4. Interact directly with desktop notifications: Click "Done! ✅" to track progress, or "Skip ⏭️" to skip.
+5. Track your completion rate and weekly stats inside the Stats tab.
+6. Explore handpicked ergonomic gear, hydration tools, and muscle recovery recommendations in the Wellness tab.
 
 Privacy note: All configurations, custom habits, and stats are stored locally in your browser storage. No data is collected or transmitted off-device.
 
@@ -45,7 +46,7 @@ English
 ### Screenshot Notes
 - Screenshot 1: Shows the main Dashboard tab with circular progress percentage, streaks, and next alarm ETA.
 - Screenshot 2: Shows the Habits list tab showcasing default habits and the creation form overlay.
-- Screenshot 3: Shows the Statistics tab showing the weekly completion rates bar chart.
+- Screenshot 3: Shows the Desk Wellness Hub tab featuring curated ergonomic gear and hydration recommendations.
 
 ## Permissions Justification
 

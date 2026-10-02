@@ -16,6 +16,16 @@ function getYesterdayString() {
   return getLocalDateString(d);
 }
 
+// Helper to safely send messages to background without unhandled rejection errors
+async function safeSendMessage(msg) {
+  try {
+    return await chrome.runtime.sendMessage(msg);
+  } catch (err) {
+    console.warn('Background message notice:', err ? err.message : err);
+    return null;
+  }
+}
+
 // ----------------------------------------------------
 // Initial Setup
 // ----------------------------------------------------
@@ -27,19 +37,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   initializeSettingsView();
   initializeStatsView();
 
+  // Open external links reliably in a new Chrome tab
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[target="_blank"]');
+    if (link && link.href && !link.href.startsWith('javascript:')) {
+      e.preventDefault();
+      chrome.tabs.create({ url: link.href });
+    }
+  });
+
   // Poll for ETA updates periodically to keep countdown fresh
   setInterval(updateNextReminderETA, 10000);
 
   // Listen to stats updates from background.js
-  chrome.runtime.onMessage.addListener((message) => {
-    if (message.type === 'STATS_UPDATED') {
-      (async () => {
-        await loadStateFromStorage();
-        renderDashboard();
-        renderStats();
-      })();
-    }
-  });
+  if (chrome.runtime && chrome.runtime.onMessage) {
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message && message.type === 'STATS_UPDATED') {
+        (async () => {
+          await loadStateFromStorage();
+          renderDashboard();
+          renderStats();
+        })();
+      }
+    });
+  }
 });
 
 async function loadStateFromStorage() {
@@ -87,6 +108,8 @@ function initializeTabs() {
         renderHabits();
       } else if (targetTab === 'stats') {
         renderStats();
+      } else if (targetTab === 'wellness') {
+        renderWellnessHub();
       }
     });
   });
@@ -98,39 +121,42 @@ function initializeTabs() {
 async function initializeDashboardView() {
   const masterToggle = document.getElementById('master-pause-toggle');
   
-  // Set initial toggle state
-  masterToggle.checked = !settingsState.paused;
+  if (masterToggle) {
+    masterToggle.checked = !settingsState.paused;
 
-  masterToggle.addEventListener('change', async (e) => {
-    settingsState.paused = !e.target.checked;
-    await chrome.storage.local.set({ settings: settingsState });
-    
-    // Notify background.js to clear/rebuild alarms
-    await chrome.runtime.sendMessage({ type: 'SETTINGS_CHANGED' });
-    
-    renderDashboard();
-  });
+    masterToggle.addEventListener('change', async (e) => {
+      settingsState.paused = !e.target.checked;
+      await chrome.storage.local.set({ settings: settingsState });
+      
+      // Notify background.js to clear/rebuild alarms
+      await safeSendMessage({ type: 'SETTINGS_CHANGED' });
+      
+      renderDashboard();
+    });
+  }
 
   // Trigger reminder now button
-  document.getElementById('trigger-now-btn').addEventListener('click', async () => {
-    const btn = document.getElementById('trigger-now-btn');
-    btn.disabled = true;
-    btn.textContent = '⏱️';
-    
-    try {
-      const response = await chrome.runtime.sendMessage({ type: 'TRIGGER_NOW' });
-      if (response && !response.success) {
-        alert(response.error || 'Failed to trigger.');
+  const triggerBtn = document.getElementById('trigger-now-btn');
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', async () => {
+      triggerBtn.disabled = true;
+      triggerBtn.textContent = '⏱️';
+      
+      try {
+        const response = await safeSendMessage({ type: 'TRIGGER_NOW' });
+        if (response && !response.success) {
+          alert(response.error || 'Failed to trigger.');
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setTimeout(() => {
+          triggerBtn.disabled = false;
+          triggerBtn.textContent = '▶';
+        }, 1000);
       }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.textContent = '▶';
-      }, 1000);
-    }
-  });
+    });
+  }
 
   const pendingDoneBtn = document.getElementById('pending-done-btn');
   const pendingSkipBtn = document.getElementById('pending-skip-btn');
@@ -138,6 +164,7 @@ async function initializeDashboardView() {
   if (pendingDoneBtn) {
     pendingDoneBtn.addEventListener('click', async () => {
       const section = document.getElementById('pending-habit-section');
+      if (!section) return;
       const habitId = section.dataset.habitId;
       const habitName = section.dataset.habitName;
 
@@ -173,7 +200,7 @@ async function initializeDashboardView() {
   if (pendingSkipBtn) {
     pendingSkipBtn.addEventListener('click', async () => {
       const section = document.getElementById('pending-habit-section');
-      if (!section.dataset.habitId) return;
+      if (!section || !section.dataset.habitId) return;
 
       const storageData = await chrome.storage.local.get('stats');
       const stats = storageData.stats || {};
@@ -377,7 +404,7 @@ function initializeHabitsView() {
     }
 
     await chrome.storage.local.set({ habits: habitsState });
-    await chrome.runtime.sendMessage({ type: 'HABITS_CHANGED' });
+    await safeSendMessage({ type: 'HABITS_CHANGED' });
     
     // Clear and Hide Form
     formContainer.classList.add('hidden');
@@ -427,7 +454,7 @@ function renderHabits() {
       if (idx !== -1) {
         habitsState[idx].enabled = e.target.checked;
         await chrome.storage.local.set({ habits: habitsState });
-        await chrome.runtime.sendMessage({ type: 'HABITS_CHANGED' });
+        await safeSendMessage({ type: 'HABITS_CHANGED' });
         updateNextReminderETA();
       }
     });
@@ -449,7 +476,7 @@ function renderHabits() {
       if (confirm(`Are you sure you want to delete "${habit.name}"?`)) {
         habitsState = habitsState.filter(h => h.id !== habit.id);
         await chrome.storage.local.set({ habits: habitsState });
-        await chrome.runtime.sendMessage({ type: 'HABITS_CHANGED' });
+        await safeSendMessage({ type: 'HABITS_CHANGED' });
         renderHabits();
         renderDashboard();
       }
@@ -535,7 +562,7 @@ function initializeSettingsView() {
     settingsState.workDays = selectedDays;
 
     await chrome.storage.local.set({ settings: settingsState });
-    await chrome.runtime.sendMessage({ type: 'SETTINGS_CHANGED' });
+    await safeSendMessage({ type: 'SETTINGS_CHANGED' });
 
     // Show success feedback
     const toast = document.getElementById('settings-save-success');
@@ -584,15 +611,18 @@ async function renderStats() {
   const totalInteractions = totalCompletions + totalSkips;
   const overallRate = totalInteractions > 0 ? Math.round((totalCompletions / totalInteractions) * 100) : 0;
 
-  document.getElementById('stats-total-completions').textContent = totalCompletions;
-  document.getElementById('stats-completion-rate').textContent = `${overallRate}%`;
+  const totalCompletionsEl = document.getElementById('stats-total-completions');
+  const completionRateEl = document.getElementById('stats-completion-rate');
+
+  if (totalCompletionsEl) totalCompletionsEl.textContent = totalCompletions;
+  if (completionRateEl) completionRateEl.textContent = `${overallRate}%`;
 
   // 2. Render weekly bar chart (last 7 days)
   const chartBarsContainer = document.getElementById('weekly-chart-bars');
   const chartLabelsContainer = document.getElementById('weekly-chart-labels');
   
-  chartBarsContainer.innerHTML = '';
-  chartLabelsContainer.innerHTML = '';
+  if (chartBarsContainer) chartBarsContainer.innerHTML = '';
+  if (chartLabelsContainer) chartLabelsContainer.innerHTML = '';
 
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const datesList = [];
@@ -647,12 +677,106 @@ async function renderStats() {
     }
 
     barWrapper.appendChild(barFill);
-    chartBarsContainer.appendChild(barWrapper);
+    if (chartBarsContainer) chartBarsContainer.appendChild(barWrapper);
 
     // Create Label DOM
     const labelItem = document.createElement('div');
     labelItem.className = 'chart-label-item';
     labelItem.textContent = dayNames[dateObj.getDay()];
-    chartLabelsContainer.appendChild(labelItem);
+    if (chartLabelsContainer) chartLabelsContainer.appendChild(labelItem);
+  });
+}
+
+// ----------------------------------------------------
+// 5. Wellness Hub Controller (Live JSON Feed)
+// ----------------------------------------------------
+const FALLBACK_DEALS = [
+  {
+    id: "hydration_1",
+    category: "Hydration",
+    title: "LARQ Smart Self-Cleaning Bottle",
+    description: "UV-C LED light sanitizes water & bottle interior automatically.",
+    price: "$99.00",
+    rating: "★ 4.8",
+    badge_class: "hydration",
+    image_url: "https://m.media-amazon.com/images/I/51+uE5wN5vL._AC_SL1500_.jpg",
+    affiliate_url: "https://www.amazon.com/dp/B07G2CS3PL?tag=deskhabits-20"
+  },
+  {
+    id: "posture_1",
+    category: "Posture",
+    title: "Everlasting Ergonomic Seat Cushion",
+    description: "Memory foam U-shape cut-out relieves tailbone & back pressure.",
+    price: "$39.95",
+    rating: "★ 4.9",
+    badge_class: "posture",
+    image_url: "https://m.media-amazon.com/images/I/81h9bXn8BvL._AC_SL1500_.jpg",
+    affiliate_url: "https://www.amazon.com/dp/B01EBDV9BU?tag=deskhabits-20"
+  },
+  {
+    id: "recovery_1",
+    category: "Recovery",
+    title: "Theragun Mini Deep Tissue Massage Gun",
+    description: "Ultra-portable massage gun relieves neck & shoulder stiffness.",
+    price: "$179.00",
+    rating: "★ 4.8",
+    badge_class: "recovery",
+    image_url: "https://m.media-amazon.com/images/I/61NfT-jN27L._AC_SL1500_.jpg",
+    affiliate_url: "https://www.amazon.com/dp/B084394ZKV?tag=deskhabits-20"
+  },
+  {
+    id: "eye_health_1",
+    category: "Eye Health",
+    title: "ANRRI Blue Light Blocking Glasses",
+    description: "Reduces digital eye strain & headaches during long coding sessions.",
+    price: "$25.95",
+    rating: "★ 4.7",
+    badge_class: "eye-health",
+    image_url: "https://m.media-amazon.com/images/I/61D8N2g4b4L._AC_SL1500_.jpg",
+    affiliate_url: "https://www.amazon.com/dp/B07D38JMB9?tag=deskhabits-20"
+  }
+];
+
+async function renderWellnessHub() {
+  const container = document.getElementById('wellness-list-container');
+  if (!container) return;
+
+  let deals = FALLBACK_DEALS;
+
+  try {
+    const res = await fetch('https://raw.githubusercontent.com/barradas/habits-notification-extension/main/wellness_deals.json', { cache: 'no-cache' });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.deals) && data.deals.length > 0) {
+        deals = data.deals;
+      }
+    }
+  } catch (err) {
+    console.log('Using local fallback wellness deals:', err ? err.message : err);
+  }
+
+  container.innerHTML = '';
+
+  deals.forEach(deal => {
+    const card = document.createElement('div');
+    card.className = 'wellness-card';
+    card.innerHTML = `
+      <div class="product-badge-row">
+        <span class="product-badge ${deal.badge_class || 'hydration'}">${escapeHTML(deal.category || 'Gear')}</span>
+        <span class="product-rating">${escapeHTML(deal.rating || '★ 4.8')}</span>
+      </div>
+      <div class="product-content">
+        <img class="product-thumb-img" src="${escapeHTML(deal.image_url)}" alt="${escapeHTML(deal.title)}" onerror="this.onerror=null; this.src='/icons/icon-48.png';" />
+        <div class="product-info">
+          <h4>${escapeHTML(deal.title)}</h4>
+          <p>${escapeHTML(deal.description)}</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+            <span class="product-price-tag">${escapeHTML(deal.price || '')}</span>
+            <a href="${escapeHTML(deal.affiliate_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm product-link">Check Deal ↗</a>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
   });
 }

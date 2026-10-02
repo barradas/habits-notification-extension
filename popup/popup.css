@@ -110,12 +110,13 @@ body {
   border: none;
   color: var(--text-sub);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  padding: 8px 0;
+  padding: 7px 2px;
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: var(--transition-smooth);
+  text-align: center;
 }
 
 .tab-btn:hover {
@@ -770,4 +771,183 @@ input:checked + .slider:before {
 .chart-label-item {
   flex: 1;
   text-align: center;
+}
+
+/* Wellness Hub View */
+.wellness-header-card {
+  margin-bottom: 8px;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.03) 100%);
+  border-color: rgba(99, 102, 241, 0.25);
+  padding: 14px;
+}
+
+.wellness-header-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.wellness-header-title h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.affiliate-badge {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(99, 102, 241, 0.2);
+  color: var(--accent-primary);
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.wellness-subtitle {
+  font-size: 10px;
+  color: var(--text-sub);
+  line-height: 1.35;
+}
+
+.wellness-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 310px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.wellness-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  transition: var(--transition-smooth);
+}
+
+.wellness-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(99, 102, 241, 0.3);
+  transform: translateY(-1px);
+}
+
+.product-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-badge {
+  font-size: 9px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.product-badge.hydration {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.product-badge.posture {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.product-badge.recovery {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.product-badge.eye-health {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+}
+
+.product-rating {
+  font-size: 10px;
+  font-weight: 600;
+  color: #fbbf24;
+}
+
+.product-content {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.product-thumb-img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 3px;
+  border: 1px solid var(--card-border);
+  flex-shrink: 0;
+}
+
+.product-price-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.product-icon {
+  font-size: 22px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-grow: 1;
+}
+
+.product-info h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.product-info p {
+  font-size: 10px;
+  color: var(--text-sub);
+  line-height: 1.3;
+}
+
+.product-link {
+  margin-top: 4px;
+  align-self: flex-start;
+  font-size: 10px !important;
+  padding: 4px 10px !important;
+  box-shadow: none !important;
+  text-decoration: none;
+}
+
+.wellness-disclaimer {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.35);
+  font-style: italic;
+  text-align: center;
+  margin-top: 4px;
+  padding: 0 8px;
+  line-height: 1.3;
 }

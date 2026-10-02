@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "updated_at": "2026-10-02",
+  "deals": [
+    {
+      "id": "hydration_1",
+      "category": "Hydration",
+      "title": "LARQ Smart Self-Cleaning Water Bottle",
+      "description": "Uses UV-C LED light to sanitize water and clean the inner bottle surfaces automatically.",
+      "price": "$99.00",
+      "rating": "★ 4.8",
+      "badge_class": "hydration",
+      "image_url": "https://m.media-amazon.com/images/I/51+uE5wN5vL._AC_SL1500_.jpg",
+      "affiliate_url": "https://www.amazon.com/dp/B07G2CS3PL?tag=deskhabits-20"
+    },
+    {
+      "id": "posture_1",
+      "category": "Posture",
+      "title": "Everlasting Comfort Memory Foam Cushion",
+      "description": "Ergonomic U-shape cut-out relieves tailbone pressure & improves posture during long work hours.",
+      "price": "$39.95",
+      "rating": "★ 4.9",
+      "badge_class": "posture",
+      "image_url": "https://m.media-amazon.com/images/I/81h9bXn8BvL._AC_SL1500_.jpg",
+      "affiliate_url": "https://www.amazon.com/dp/B01EBDV9BU?tag=deskhabits-20"
+    },
+    {
+      "id": "recovery_1",
+      "category": "Recovery",
+      "title": "Theragun Mini Deep Tissue Massage Gun",
+      "description": "Ultra-portable massage gun designed to relieve neck stiffness & shoulder tension during breaks.",
+      "price": "$179.00",
+      "rating": "★ 4.8",
+      "badge_class": "recovery",
+      "image_url": "https://m.media-amazon.com/images/I/61NfT-jN27L._AC_SL1500_.jpg",
+      "affiliate_url": "https://www.amazon.com/dp/B084394ZKV?tag=deskhabits-20"
+    },
+    {
+      "id": "eye_health_1",
+      "category": "Eye Health",
+      "title": "ANRRI Blue Light Blocking Glasses",
+      "description": "Reduces digital eye strain, glare & headaches during extended screen & coding sessions.",
+      "price": "$25.95",
+      "rating": "★ 4.7",
+      "badge_class": "eye-health",
+      "image_url": "https://m.media-amazon.com/images/I/61D8N2g4b4L._AC_SL1500_.jpg",
+      "affiliate_url": "https://www.amazon.com/dp/B07D38JMB9?tag=deskhabits-20"
+    }
+  ]
+}

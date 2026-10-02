@@ -29,8 +29,9 @@
     <nav class="tab-navigation">
       <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
       <button class="tab-btn" data-tab="habits">Habits</button>
-      <button class="tab-btn" data-tab="settings">Settings</button>
       <button class="tab-btn" data-tab="stats">Stats</button>
+      <button class="tab-btn" data-tab="wellness">Wellness</button>
+      <button class="tab-btn" data-tab="settings">Settings</button>
     </nav>
 
     <!-- Content Sections -->
@@ -249,6 +250,21 @@
         </div>
       </section>
 
+      <!-- 5. WELLNESS VIEW -->
+      <section id="tab-wellness" class="view-pane">
+        <div class="glass-card wellness-header-card">
+          <div class="wellness-header-title">
+            <h3>Desk Wellness Hub 🌿</h3>
+            <span class="affiliate-badge">Curated Gear</span>
+          </div>
+          <p class="wellness-subtitle">Handpicked health & ergonomic tools to elevate your desk setup. DeskHabits remains 100% free through reader-supported links.</p>
+        </div>
+
+        <div class="wellness-list" id="wellness-list-container">
+          <!-- Dynamically populated from remote JSON feed & local fallback -->
+        </div>
+        <p class="wellness-disclaimer">* Purchases made through links may earn DeskHabits a small referral commission at no extra cost to you.</p>
+      </section>
     </main>
   </div>
   <script src="popup.js"></script>
