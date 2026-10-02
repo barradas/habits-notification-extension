@@ -757,21 +757,31 @@ async function renderWellnessHub() {
 
   container.innerHTML = '';
 
+const CATEGORY_FALLBACK_IMAGES = {
+  hydration: '/icons/product-bottle.png',
+  posture: '/icons/product-cushion.png',
+  recovery: '/icons/product-massage.png',
+  'eye-health': '/icons/product-glasses.png'
+};
+
   deals.forEach(deal => {
     const card = document.createElement('div');
     card.className = 'wellness-card';
+    const priceDisplay = deal.price ? `<span class="product-price-tag">${escapeHTML(deal.price)}</span>` : `<span class="product-price-tag" style="color:var(--text-sub); font-size: 10px;">Check Price on Amazon</span>`;
+    const fallbackSrc = CATEGORY_FALLBACK_IMAGES[deal.badge_class] || '/icons/icon-48.png';
+
     card.innerHTML = `
       <div class="product-badge-row">
         <span class="product-badge ${deal.badge_class || 'hydration'}">${escapeHTML(deal.category || 'Gear')}</span>
         <span class="product-rating">${escapeHTML(deal.rating || '★ 4.8')}</span>
       </div>
       <div class="product-content">
-        <img class="product-thumb-img" src="${escapeHTML(deal.image_url)}" alt="${escapeHTML(deal.title)}" />
+        <img class="product-thumb-img" src="${escapeHTML(deal.image_url || fallbackSrc)}" alt="${escapeHTML(deal.title)}" />
         <div class="product-info">
           <h4>${escapeHTML(deal.title)}</h4>
           <p>${escapeHTML(deal.description)}</p>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-            <span class="product-price-tag">${escapeHTML(deal.price || '')}</span>
+            ${priceDisplay}
             <a href="${escapeHTML(deal.affiliate_url)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm product-link">Check Deal ↗</a>
           </div>
         </div>
@@ -781,7 +791,7 @@ async function renderWellnessHub() {
     const img = card.querySelector('.product-thumb-img');
     if (img) {
       img.addEventListener('error', () => {
-        img.src = '/icons/icon-48.png';
+        img.src = fallbackSrc;
       }, { once: true });
     }
 
