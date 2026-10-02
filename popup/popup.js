@@ -766,7 +766,7 @@ async function renderWellnessHub() {
         <span class="product-rating">${escapeHTML(deal.rating || '★ 4.8')}</span>
       </div>
       <div class="product-content">
-        <img class="product-thumb-img" src="${escapeHTML(deal.image_url)}" alt="${escapeHTML(deal.title)}" onerror="this.onerror=null; this.src='/icons/icon-48.png';" />
+        <img class="product-thumb-img" src="${escapeHTML(deal.image_url)}" alt="${escapeHTML(deal.title)}" />
         <div class="product-info">
           <h4>${escapeHTML(deal.title)}</h4>
           <p>${escapeHTML(deal.description)}</p>
@@ -777,6 +777,14 @@ async function renderWellnessHub() {
         </div>
       </div>
     `;
+
+    const img = card.querySelector('.product-thumb-img');
+    if (img) {
+      img.addEventListener('error', () => {
+        img.src = '/icons/icon-48.png';
+      }, { once: true });
+    }
+
     container.appendChild(card);
   });
 }
