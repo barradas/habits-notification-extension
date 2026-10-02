@@ -743,6 +743,20 @@ async function renderWellnessHub() {
 
   let deals = FALLBACK_DEALS;
 
+  // 1. Load local extension package wellness_deals.json first (instant & reliable)
+  try {
+    const localRes = await fetch(chrome.runtime.getURL('/wellness_deals.json'));
+    if (localRes.ok) {
+      const localData = await localRes.json();
+      if (localData && Array.isArray(localData.deals) && localData.deals.length > 0) {
+        deals = localData.deals;
+      }
+    }
+  } catch (e) {
+    // Keep FALLBACK_DEALS
+  }
+
+  // 2. Attempt remote feed fetch if network is available
   try {
     const res = await fetch('https://raw.githubusercontent.com/barradas/habits-notification-extension/main/wellness_deals.json', { cache: 'no-cache' });
     if (res.ok) {
@@ -752,7 +766,7 @@ async function renderWellnessHub() {
       }
     }
   } catch (err) {
-    console.log('Using local fallback wellness deals:', err ? err.message : err);
+    // Keep local deals
   }
 
   container.innerHTML = '';

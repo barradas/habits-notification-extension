@@ -16,6 +16,7 @@ rm -f "$BUILD_DIR/$ZIP_NAME"
 zip -r "$BUILD_DIR/$ZIP_NAME" \
   manifest.json \
   background.js \
+  wellness_deals.json \
   popup/ \
   icons/ \
   -x "*.DS_Store" "*.git*" "icons/generate_icons.py"
