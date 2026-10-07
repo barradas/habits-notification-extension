@@ -750,7 +750,7 @@ async function renderWellnessHub() {
 
   // 2. Attempt remote feed fetch if network is available
   try {
-    const res = await fetch('https://raw.githubusercontent.com/barradas/habits-notification-extension/main/wellness_deals.json', { cache: 'no-cache' });
+    const res = await fetch('https://raw.githubusercontent.com/barradas/habits-notification-extension/master/wellness_deals.json', { cache: 'no-cache' });
     if (res.ok) {
       const data = await res.json();
       if (data && Array.isArray(data.deals) && data.deals.length > 0) {
